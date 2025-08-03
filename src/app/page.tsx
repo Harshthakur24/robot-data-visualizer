@@ -1,5 +1,6 @@
 'use client';
 import React, { useState, useEffect, useMemo, useRef } from 'react';
+import Image from 'next/image';
 import { AreaChart, Area, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine } from 'recharts';
 import { Play, Pause, RotateCcw, Upload, Eye, EyeOff, Activity, Video, Bot, Settings, FileText, ChevronDown } from 'lucide-react';
 
@@ -226,27 +227,25 @@ const Home = () => {
   }
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 font-inter text-gray-800">
+    <div className="flex h-screen bg-gradient-to-br from-purple-50 via-white to-purple-50 font-inter text-gray-800">
       {/* Sidebar */}
-      <aside className="w-80 h-full bg-white/80 backdrop-blur-xl border-r border-gray-200/50 shadow-xl flex flex-col">
+      <aside className="w-80 h-full bg-white/90 backdrop-blur-xl border-r border-purple-200/50 shadow-xl flex flex-col">
         {/* Header */}
         <div className="p-6 border-b border-gray-100">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
-              <Bot className="w-6 h-6 text-white" />
-            </div>
+            <Image src="/droid.ico" alt="OpenDroid" width={40} height={40} />
             <div>
-              <h1 className="text-xl font-bold text-gray-900">RoboViz</h1>
-              <p className="text-xs text-gray-500 font-medium">Data Visualization Platform</p>
+              <h1 className="text-xl font-bold text-gray-900">OpenDroids RoboViz</h1>
+              <p className="text-xs text-gray-500 font-medium">Robot Data Visualization Platform</p>
             </div>
           </div>
 
-          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4 border border-blue-100">
+          <div className="bg-gradient-to-r from-purple-50 to-purple-100 rounded-xl p-4 border border-purple-200">
             <div className="flex items-center gap-2 mb-2">
-              <FileText className="w-5 h-5 text-blue-600" />
-              <span className="text-md font-semibold text-blue-900">Current Task</span>
+              <FileText className="w-5 h-5 text-[#9933FF]" />
+              <span className="text-md font-semibold text-purple-900">Current Task</span>
             </div>
-            <p className="text-blue-800 ml-7 font-medium text-sm leading-relaxed">{robotData.robot_task}</p>
+            <p className="text-purple-800 ml-7 font-medium text-sm leading-relaxed">{robotData.robot_task}</p>
           </div>
         </div>
 
@@ -259,8 +258,8 @@ const Home = () => {
                 key={ep.episode_id}
                 onClick={() => setActiveEpisodeIndex(index)}
                 className={`w-full text-left p-4 rounded-xl hover:cursor-pointer hover:scale-105 hover:shadow-lg transition-all duration-200 group ${activeEpisodeIndex === index
-                  ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/25 scale-[1.02]'
-                  : 'bg-white hover:bg-gray-50 border border-gray-200 hover:border-gray-300 hover:shadow-md'
+                  ? 'bg-gradient-to-r from-[#9933FF] to-purple-600 text-white shadow-lg shadow-purple-500/25 scale-[1.02]'
+                  : 'bg-white hover:bg-purple-50 border border-gray-200 hover:border-purple-300 hover:shadow-md'
                   }`}
               >
                 <div className="flex items-center justify-between mb-2">
@@ -295,7 +294,7 @@ const Home = () => {
       {/* Main Content */}
       <main className="flex-1 flex flex-col overflow-hidden">
         {/* Header & Controls */}
-        <header className="bg-white/90 backdrop-blur-xl border-b border-gray-200/50 shadow-sm">
+        <header className="bg-white/90 backdrop-blur-xl border-b border-purple-200/50 shadow-sm">
           <div className="p-6">
             <div className="flex items-center justify-between mb-4">
               <div>
@@ -311,7 +310,7 @@ const Home = () => {
               <div className="flex items-center gap-3 scale-95">
                 <button
                   onClick={() => setIsPlaying(!isPlaying)}
-                  className="px-3 py-3 bg-gradient-to-r hover:cursor-pointer from-blue-600 to-indigo-600 text-white hover:from-blue-700 hover:to-indigo-700 rounded-xl flex items-center gap-2 transition-all duration-200 font-semibold shadow-lg hover:shadow-xl hover:scale-105 min-w-[120px] justify-center"
+                  className="px-3 py-3 bg-gradient-to-r hover:cursor-pointer from-[#9933FF] to-purple-600 text-white hover:from-purple-700 hover:to-purple-700 rounded-xl flex items-center gap-2 transition-all duration-200 font-semibold shadow-lg hover:shadow-xl hover:scale-105 min-w-[120px] justify-center"
                 >
                   {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
                   {isPlaying ? 'Pause' : 'Play'}
@@ -338,7 +337,7 @@ const Home = () => {
                       }
                       setIsSpeedDropdownOpen(!isSpeedDropdownOpen);
                     }}
-                    className="bg-gradient-to-r from-gray-50 to-gray-100 border border-gray-200 rounded-xl px-4 py-3 hover:cursor-pointer text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 shadow-sm hover:shadow-md transition-all duration-200 min-w-[140px] text-gray-700 flex items-center justify-between"
+                    className="bg-gradient-to-r from-gray-50 to-gray-100 border border-gray-200 rounded-xl px-4 py-3 hover:cursor-pointer text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#9933FF]/20 focus:border-[#9933FF] shadow-sm hover:shadow-md transition-all duration-200 min-w-[140px] text-gray-700 flex items-center justify-between"
                   >
                     <span>{playbackSpeed}× Speed</span>
                     <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isSpeedDropdownOpen ? 'rotate-180' : ''}`} />
@@ -347,7 +346,7 @@ const Home = () => {
               </div>
 
               {/* Timeline */}
-              <div className="col-span-2 h-16 ml-4 bg-gradient-to-r from-gray-50 to-blue-50 rounded-xl p-2 border border-gray-100">
+              <div className="col-span-2 h-16 ml-4 bg-gradient-to-r from-gray-50 to-purple-50 rounded-xl p-2 border border-purple-100">
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart
                     data={chartData}
@@ -360,11 +359,11 @@ const Home = () => {
                   >
                     <defs>
                       <linearGradient id="timelineGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
-                        <stop offset="95%" stopColor="#3b82f6" stopOpacity={0.05} />
+                        <stop offset="5%" stopColor="#9933FF" stopOpacity={0.3} />
+                        <stop offset="95%" stopColor="#9933FF" stopOpacity={0.05} />
                       </linearGradient>
                     </defs>
-                    <Area type="monotone" dataKey="joint1" stroke="#3b82f6" strokeWidth={2} fill="url(#timelineGradient)" />
+                    <Area type="monotone" dataKey="joint1" stroke="#9933FF" strokeWidth={2} fill="url(#timelineGradient)" />
                     <XAxis dataKey="time" hide />
                     <YAxis domain={['dataMin - 5', 'dataMax + 5']} hide />
                     <ReferenceLine x={chartData[currentFrame]?.time} stroke="#ef4444" strokeWidth={3} strokeDasharray="none" />
@@ -387,7 +386,7 @@ const Home = () => {
             {visiblePanels.video && (
               <div className="bg-white/90 backdrop-blur-xl border border-gray-200/50 rounded-2xl shadow-xl p-6">
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
+                  <div className="w-8 h-8 bg-gradient-to-r from-[#9933FF] to-purple-600 rounded-lg flex items-center justify-center">
                     <Video className="w-4 h-4 text-white" />
                   </div>
                   <h3 className="text-lg font-bold text-gray-900">Camera Feeds</h3>
@@ -411,7 +410,7 @@ const Home = () => {
             {visiblePanels.joints && (
               <div className="bg-white/90 backdrop-blur-xl border border-gray-200/50 rounded-2xl shadow-xl p-6">
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center">
+                  <div className="w-8 h-8 bg-gradient-to-r from-[#9933FF] to-purple-600 rounded-lg flex items-center justify-center">
                     <Settings className="w-4 h-4 text-white" />
                   </div>
                   <h3 className="text-lg font-bold text-gray-900">Joint States</h3>
@@ -430,7 +429,7 @@ const Home = () => {
                       <Tooltip content={<CustomTooltip />} />
                       <Legend />
                       <ReferenceLine x={chartData[currentFrame]?.time} stroke="#ef4444" strokeWidth={2} />
-                      <Line type="monotone" dataKey="joint1" stroke="#3b82f6" dot={false} strokeWidth={3} name="Joint 1" />
+                      <Line type="monotone" dataKey="joint1" stroke="#9933FF" dot={false} strokeWidth={3} name="Joint 1" />
                       <Line type="monotone" dataKey="joint2" stroke="#8b5cf6" dot={false} strokeWidth={3} name="Joint 2" />
                       <Line type="monotone" dataKey="joint3" stroke="#ec4899" dot={false} strokeWidth={3} name="Joint 3" />
                     </LineChart>
@@ -442,7 +441,7 @@ const Home = () => {
             {visiblePanels.gripper && (
               <div className="bg-white/90 backdrop-blur-xl border border-gray-200/50 rounded-2xl shadow-xl p-6">
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="w-8 h-8 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg flex items-center justify-center">
+                  <div className="w-8 h-8 bg-gradient-to-r from-[#9933FF] to-purple-600 rounded-lg flex items-center justify-center">
                     <Activity className="w-4 h-4 text-white" />
                   </div>
                   <h3 className="text-lg font-bold text-gray-900">Gripper Analysis</h3>
@@ -452,8 +451,8 @@ const Home = () => {
                     <AreaChart data={chartData}>
                       <defs>
                         <linearGradient id="posGradient" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#6366f1" stopOpacity={0.4} />
-                          <stop offset="95%" stopColor="#6366f1" stopOpacity={0.05} />
+                          <stop offset="5%" stopColor="#9933FF" stopOpacity={0.4} />
+                          <stop offset="95%" stopColor="#9933FF" stopOpacity={0.05} />
                         </linearGradient>
                         <linearGradient id="forceGradient" x1="0" y1="0" x2="0" y2="1">
                           <stop offset="5%" stopColor="#059669" stopOpacity={0.4} />
@@ -467,12 +466,12 @@ const Home = () => {
                         style={{ fontSize: 12 }}
                         stroke="#6b7280"
                       />
-                      <YAxis yAxisId="left" orientation="left" stroke="#6366f1" style={{ fontSize: 12 }} />
+                      <YAxis yAxisId="left" orientation="left" stroke="#9933FF" style={{ fontSize: 12 }} />
                       <YAxis yAxisId="right" orientation="right" stroke="#059669" style={{ fontSize: 12 }} />
                       <Tooltip content={<CustomTooltip />} />
                       <Legend />
                       <ReferenceLine x={chartData[currentFrame]?.time} stroke="#ef4444" strokeWidth={2} />
-                      <Area yAxisId="left" type="monotone" dataKey="gripper_pos" name="Position (%)" stroke="#6366f1" fill="url(#posGradient)" strokeWidth={2.5} />
+                      <Area yAxisId="left" type="monotone" dataKey="gripper_pos" name="Position (%)" stroke="#9933FF" fill="url(#posGradient)" strokeWidth={2.5} />
                       <Area yAxisId="right" type="monotone" dataKey="gripper_force" name="Force (N)" stroke="#059669" fill="url(#forceGradient)" strokeWidth={2.5} />
                     </AreaChart>
                   </ResponsiveContainer>
@@ -538,7 +537,7 @@ const Home = () => {
                 setIsSpeedDropdownOpen(false);
               }}
               className={`w-full px-4 py-3 text-left text-sm font-medium transition-colors duration-150 hover:bg-gray-50 hover:cursor-pointer ${playbackSpeed === speed
-                ? 'bg-blue-50 text-blue-700 border-l-4 border-blue-500'
+                ? 'bg-purple-50 text-[#9933FF] border-l-4 border-[#9933FF]'
                 : 'text-gray-700'
                 }`}
             >
