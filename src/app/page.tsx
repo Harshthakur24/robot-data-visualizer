@@ -227,9 +227,9 @@ const Home = () => {
   }
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-purple-50 via-white to-purple-50 font-inter text-gray-800">
+    <div className="flex flex-col lg:flex-row h-screen bg-gradient-to-br from-purple-50 via-white to-purple-50 font-inter text-gray-800">
       {/* Sidebar */}
-      <aside className="w-80 h-full bg-white/90 backdrop-blur-xl border-r border-purple-200/50 shadow-xl flex flex-col">
+      <aside className="w-full lg:w-80 h-auto lg:h-full bg-white/90 backdrop-blur-xl border-b lg:border-r border-purple-200/50 shadow-xl flex flex-col lg:overflow-hidden">
         {/* Header */}
         <div className="p-6 border-b border-gray-100">
           <div className="flex items-center gap-3 mb-4">
@@ -250,7 +250,7 @@ const Home = () => {
         </div>
 
         {/* Episodes */}
-        <div className="flex-1 p-6 overflow-y-auto">
+        <div className="flex-1 p-6 lg:overflow-y-auto">
           <h3 className="text-xl ml-2 font-bold font-mono text-gray-900 mb-4 tracking-wide uppercase">Episodes</h3>
           <div className="space-y-3 font-mono scale-95">
             {robotData.episodes.map((ep, index) => (
@@ -292,7 +292,7 @@ const Home = () => {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col overflow-hidden">
+      <main className="flex-1 flex flex-col">
         {/* Header & Controls */}
         <header className="bg-white/90 backdrop-blur-xl border-b border-purple-200/50 shadow-sm">
           <div className="p-6">
@@ -306,11 +306,11 @@ const Home = () => {
             </div>
 
             {/* Controls */}
-            <div className="grid grid-cols-3 items-center gap-8">
-              <div className="flex items-center gap-3 scale-95">
+            <div className="grid grid-cols-1 lg:grid-cols-3 items-center gap-4 lg:gap-8">
+              <div className="flex items-center gap-2 lg:gap-3 scale-95 justify-center lg:justify-start">
                 <button
                   onClick={() => setIsPlaying(!isPlaying)}
-                  className="px-3 py-3 bg-gradient-to-r hover:cursor-pointer from-[#9933FF] to-purple-600 text-white hover:from-purple-700 hover:to-purple-700 rounded-xl flex items-center gap-2 transition-all duration-200 font-semibold shadow-lg hover:shadow-xl hover:scale-105 min-w-[120px] justify-center"
+                  className="px-3 py-3 bg-gradient-to-r hover:cursor-pointer from-[#9933FF] to-purple-600 text-white hover:from-purple-700 hover:to-purple-700 rounded-xl flex items-center gap-2 transition-all duration-200 font-semibold shadow-lg hover:shadow-xl hover:scale-105 min-w-[100px] lg:min-w-[120px] justify-center text-sm lg:text-base"
                 >
                   {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
                   {isPlaying ? 'Pause' : 'Play'}
@@ -321,7 +321,7 @@ const Home = () => {
                   className="p-3 bg-white border border-gray-200 hover:bg-gray-50 hover:cursor-pointer hover:border-gray-300 rounded-xl transition-all duration-200 shadow-sm hover:shadow-md"
                   title="Reset to start"
                 >
-                  <RotateCcw className="w-5 h-5 text-gray-600" />
+                  <RotateCcw className="w-4 h-4 lg:w-5 lg:h-5 text-gray-600" />
                 </button>
 
                 <div className="relative speed-dropdown" ref={speedDropdownRef}>
@@ -337,7 +337,7 @@ const Home = () => {
                       }
                       setIsSpeedDropdownOpen(!isSpeedDropdownOpen);
                     }}
-                    className="bg-gradient-to-r from-gray-50 to-gray-100 border border-gray-200 rounded-xl px-4 py-3 hover:cursor-pointer text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#9933FF]/20 focus:border-[#9933FF] shadow-sm hover:shadow-md transition-all duration-200 min-w-[140px] text-gray-700 flex items-center justify-between"
+                    className="bg-gradient-to-r from-gray-50 to-gray-100 border border-gray-200 rounded-xl px-3 lg:px-4 py-3 hover:cursor-pointer text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#9933FF]/20 focus:border-[#9933FF] shadow-sm hover:shadow-md transition-all duration-200 min-w-[120px] lg:min-w-[140px] text-gray-700 flex items-center justify-between"
                   >
                     <span>{playbackSpeed}× Speed</span>
                     <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isSpeedDropdownOpen ? 'rotate-180' : ''}`} />
@@ -346,7 +346,7 @@ const Home = () => {
               </div>
 
               {/* Timeline */}
-              <div className="col-span-2 h-16 ml-4 bg-gradient-to-r from-gray-50 to-purple-50 rounded-xl p-2 border border-purple-100">
+              <div className="col-span-1 lg:col-span-2 h-16 mt-4 lg:mt-0 lg:ml-4 bg-gradient-to-r from-gray-50 to-purple-50 rounded-xl p-2 border border-purple-100">
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart
                     data={chartData}
@@ -372,26 +372,26 @@ const Home = () => {
               </div>
             </div>
 
-            <div className="flex items-center justify-center gap-6 mt-3 text-sm font-mono bg-gray-50 rounded-lg py-2 px-4">
+            <div className="flex flex-col lg:flex-row items-center justify-center gap-2 lg:gap-6 mt-3 text-xs lg:text-sm font-mono bg-gray-50 rounded-lg py-2 px-4">
               <span className="text-gray-600">Frame <span className="font-bold text-gray-900">{currentFrame + 1}</span> of <span className="font-bold text-gray-900">{currentEpisode.frames_per_episode}</span></span>
-              <div className="w-1 h-1 bg-gray-400 rounded-full" />
+              <div className="hidden lg:block w-1 h-1 bg-gray-400 rounded-full" />
               <span className="text-gray-600">Time <span className="font-bold text-gray-900">{(currentFrame * (currentEpisode.duration_secs / currentEpisode.frames_per_episode)).toFixed(2)}s</span> of <span className="font-bold text-gray-900">{currentEpisode.duration_secs.toFixed(2)}s</span></span>
             </div>
           </div>
         </header>
 
         {/* Panels */}
-        <div className="flex-1 p-6 overflow-y-auto">
-          <div className="space-y-6">
+        <div className="flex-1 p-4 lg:p-6 overflow-y-auto bg-white">
+          <div className="space-y-4 lg:space-y-6">
             {visiblePanels.video && (
-              <div className="bg-white/90 backdrop-blur-xl border border-gray-200/50 rounded-2xl shadow-xl p-6">
-                <div className="flex items-center gap-3 mb-6">
+              <div className="bg-white border border-gray-200/50 rounded-2xl shadow-xl p-4 lg:p-6">
+                <div className="flex items-center gap-3 mb-4 lg:mb-6">
                   <div className="w-8 h-8 bg-gradient-to-r from-[#9933FF] to-purple-600 rounded-lg flex items-center justify-center">
                     <Video className="w-4 h-4 text-white" />
                   </div>
                   <h3 className="text-lg font-bold text-gray-900">Camera Feeds</h3>
                 </div>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
                   {currentEpisode.modalities.video_tensors.map(cam => (
                     <div key={cam.camera_name} className="group">
                       <h4 className="font-semibold text-sm text-gray-600 mb-3">{cam.camera_name}</h4>
@@ -408,8 +408,8 @@ const Home = () => {
             )}
 
             {visiblePanels.joints && (
-              <div className="bg-white/90 backdrop-blur-xl border border-gray-200/50 rounded-2xl shadow-xl p-6">
-                <div className="flex items-center gap-3 mb-6">
+              <div className="bg-white border border-gray-200/50 rounded-2xl shadow-xl p-4 lg:p-6">
+                <div className="flex items-center gap-3 mb-4 lg:mb-6">
                   <div className="w-8 h-8 bg-gradient-to-r from-[#9933FF] to-purple-600 rounded-lg flex items-center justify-center">
                     <Settings className="w-4 h-4 text-white" />
                   </div>
@@ -439,8 +439,8 @@ const Home = () => {
             )}
 
             {visiblePanels.gripper && (
-              <div className="bg-white/90 backdrop-blur-xl border border-gray-200/50 rounded-2xl shadow-xl p-6">
-                <div className="flex items-center gap-3 mb-6">
+              <div className="bg-white border border-gray-200/50 rounded-2xl shadow-xl p-4 lg:p-6">
+                <div className="flex items-center gap-3 mb-4 lg:mb-6">
                   <div className="w-8 h-8 bg-gradient-to-r from-[#9933FF] to-purple-600 rounded-lg flex items-center justify-center">
                     <Activity className="w-4 h-4 text-white" />
                   </div>
@@ -480,21 +480,21 @@ const Home = () => {
             )}
 
             {visiblePanels.velocity && (
-              <div className="bg-white/90 backdrop-blur-xl border border-gray-200/50 rounded-2xl shadow-xl p-6">
-                <div className="flex items-center gap-3 mb-6">
+              <div className="bg-white border border-gray-200/50 rounded-2xl shadow-xl p-4 lg:p-6">
+                <div className="flex items-center gap-3 mb-4 lg:mb-6">
                   <div className="w-8 h-8 bg-gradient-to-r from-slate-600 to-gray-700 rounded-lg flex items-center justify-center">
                     <Activity className="w-4 h-4 text-white" />
                   </div>
                   <h3 className="text-lg font-bold text-gray-900">Command Velocity</h3>
                 </div>
-                <div className="grid grid-cols-2 gap-8">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-8">
                   <div className="space-y-4">
                     <h4 className="font-semibold text-gray-800 text-sm uppercase tracking-wider mb-4 border-b border-gray-200 pb-2">Linear Velocity</h4>
                     <div className="space-y-3 font-mono text-sm">
                       {['VX', 'VY', 'VZ'].map((label, idx) => (
-                        <div key={label} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors">
-                          <span className="font-semibold text-gray-700">{label}:</span>
-                          <span className="font-bold text-gray-900">{currentEpisode.modalities.cmd_vel.tensor[idx].toFixed(3)} m/s</span>
+                        <div key={label} className="flex items-center justify-between p-3 lg:p-4 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors">
+                          <span className="font-semibold text-gray-700 text-xs lg:text-sm">{label}:</span>
+                          <span className="font-bold text-gray-900 text-xs lg:text-sm">{currentEpisode.modalities.cmd_vel.tensor[idx].toFixed(3)} m/s</span>
                         </div>
                       ))}
                     </div>
@@ -503,9 +503,9 @@ const Home = () => {
                     <h4 className="font-semibold text-gray-800 text-sm uppercase tracking-wider mb-4 border-b border-gray-200 pb-2">Angular Velocity</h4>
                     <div className="space-y-3 font-mono text-sm">
                       {['WX', 'WY', 'WZ'].map((label, idx) => (
-                        <div key={label} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors">
-                          <span className="font-semibold text-gray-700">{label}:</span>
-                          <span className="font-bold text-gray-900">{currentEpisode.modalities.cmd_vel.tensor[idx + 3].toFixed(3)} rad/s</span>
+                        <div key={label} className="flex items-center justify-between p-3 lg:p-4 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors">
+                          <span className="font-semibold text-gray-700 text-xs lg:text-sm">{label}:</span>
+                          <span className="font-bold text-gray-900 text-xs lg:text-sm">{currentEpisode.modalities.cmd_vel.tensor[idx + 3].toFixed(3)} rad/s</span>
                         </div>
                       ))}
                     </div>
