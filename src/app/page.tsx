@@ -390,10 +390,10 @@ const Home = () => {
 
   if (!robotData || !currentEpisode) {
     return (
-      <div className="flex items-center justify-center h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      <div className="flex items-center justify-center h-screen bg-gradient-to-br from-purple-50 via-white to-purple-50">
         <div className="text-center">
           <div className="relative">
-            <div className="w-16 h-16 mx-auto mb-6 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-xl">
+            <div className="w-16 h-16 mx-auto mb-6 bg-gradient-to-r from-[#9933FF] to-purple-600 rounded-2xl flex items-center justify-center shadow-xl">
               <Activity className="w-8 h-8 text-white animate-pulse" />
             </div>
           </div>
