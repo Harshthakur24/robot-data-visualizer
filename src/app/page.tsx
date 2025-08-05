@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import Image from 'next/image';
 import { AreaChart, Area, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine } from 'recharts';
-import { Play, Pause, RotateCcw, Upload, Eye, EyeOff, Activity, Video, Bot, Settings, FileText, ChevronDown } from 'lucide-react';
+import { Play, Pause, RotateCcw, Upload, Eye, EyeOff, Activity, Video, Bot, Settings, FileText, ChevronDown, Edit3, Check, X, ArrowLeftRight } from 'lucide-react';
 
 //- INTERFACES & TYPES ---------------------------------- //
 
@@ -87,6 +87,172 @@ const generateMockData = (): RobotData => {
   };
 };
 
+//- TASK SWITCHER COMPONENT ------------------------------------ //
+const TaskSwitcher = ({ currentTask, onTaskChange }: { currentTask: string; onTaskChange: (task: string) => void }) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editValue, setEditValue] = useState(currentTask);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const predefinedTasks = [
+    "Precision Assembly Task",
+    "Object Manipulation",
+    "Path Planning Demo",
+    "Grasping Simulation",
+    "Trajectory Optimization",
+    "Force Control Test",
+    "Vision-Based Navigation",
+    "Multi-Agent Coordination",
+
+
+  ];
+
+  useEffect(() => {
+    if (isEditing && inputRef.current) {
+      inputRef.current.focus();
+      inputRef.current.select();
+    }
+  }, [isEditing]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    if (isDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isDropdownOpen]);
+
+  const handleSave = () => {
+    if (editValue.trim()) {
+      onTaskChange(editValue.trim());
+      setIsEditing(false);
+    }
+  };
+
+  const handleCancel = () => {
+    setEditValue(currentTask);
+    setIsEditing(false);
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSave();
+    } else if (e.key === 'Escape') {
+      handleCancel();
+    }
+  };
+
+  const handleTaskSelect = (task: string) => {
+    onTaskChange(task);
+    setIsDropdownOpen(false);
+  };
+
+  return (
+    <div className="relative">
+      {isEditing ? (
+        <div className="bg-gradient-to-r from-purple-50 to-purple-100 rounded-xl p-4 border border-purple-200">
+          <div className="flex items-center gap-2 mb-2">
+            <FileText className="w-5 h-5 text-[#9933FF]" />
+            <span className="text-md font-semibold text-purple-900">Current Task</span>
+          </div>
+          <div className="ml-7 flex-col space-y-2 items-center gap-2">
+            <input
+              ref={inputRef}
+              type="text"
+              value={editValue}
+              onChange={(e) => setEditValue(e.target.value)}
+              onKeyDown={handleKeyPress}
+              className="flex-1 bg-white border border-purple-300 rounded-lg px-3 py-2 text-purple-800 font-medium text-sm focus:outline-none focus:ring-2 focus:ring-[#9933FF]/50 focus:border-[#9933FF]"
+              placeholder="Enter task name..."
+            />
+            <div className="flex items-center justify-end gap-2 mr-2">
+              <button
+                onClick={handleSave}
+                className="p-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors duration-200 hover:scale-105 shadow-md hover:shadow-lg hover:cursor-pointer"
+                title="Save"
+              >
+                <Check className="w-4 h-4" />
+              </button>
+              <button
+                onClick={handleCancel}
+                className="p-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors duration-200 hover:scale-105 shadow-md hover:shadow-lg hover:cursor-pointer"
+                title="Cancel"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="group relative">
+          <div className="bg-gradient-to-r from-purple-50 to-purple-100 rounded-xl p-4 border border-purple-200 hover:border-purple-300 transition-all duration-200">
+            <div className="flex items-center gap-2 mb-2">
+              <FileText className="w-5 h-5 text-[#9933FF]" />
+              <span className="text-md font-semibold text-purple-900">Current Task</span>
+              <div className="flex items-center gap-2 ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsEditing(true);
+                  }}
+                  className="p-2 bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white rounded-lg transition-all duration-200 shadow-md hover:shadow-lg hover:scale-105 hover:cursor-pointer"
+                  title="Edit task"
+                >
+                  <Edit3 className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsDropdownOpen(!isDropdownOpen);
+                  }}
+                  className="p-2 bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 text-white rounded-lg transition-all duration-200 shadow-md hover:shadow-lg hover:scale-105 hover:cursor-pointer"
+                  title="Choose from predefined tasks"
+                >
+                  <ArrowLeftRight className={`w-4 h-4 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`} />
+                </button>
+              </div>
+            </div>
+            <p className="text-purple-800 ml-7 font-medium text-sm leading-relaxed">{currentTask}</p>
+          </div>
+
+          {/* Dropdown for predefined tasks */}
+          {isDropdownOpen && (
+            <div
+              ref={dropdownRef}
+              className="absolute top-full left-0 right-0 mt-2 bg-white border border-purple-200 rounded-xl shadow-xl z-50 overflow-hidden"
+            >
+              <div className="p-2">
+                <div className="text-xs font-semibold text-purple-600 mb-2 px-2">Choose a task:</div>
+                <div className="max-h-72 overflow-y-auto">
+                  {predefinedTasks.map((task, index) => (
+                    <button
+                      key={index}
+                      onClick={() => handleTaskSelect(task)}
+                      className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors duration-150 hover:bg-purple-50 ${task === currentTask ? 'bg-purple-100 text-purple-800 font-medium' : 'text-gray-700'
+                        }`}
+                    >
+                      {task}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
 //- CUSTOM CHART TOOLTIP ---------------------------------------------------- //
 const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?: Array<{ color: string; name: string; value: number }>; label?: number }) => {
   if (active && payload && payload.length && typeof label === 'number') {
@@ -105,7 +271,7 @@ const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?:
   return null;
 };
 
-//- MAIN COMPONENT ---------------------------------------------------------------------- //
+
 const Home = () => {
   const [robotData, setRobotData] = useState<RobotData | null>(null);
   const [activeEpisodeIndex, setActiveEpisodeIndex] = useState<number>(0);
@@ -181,6 +347,9 @@ const Home = () => {
         joint1: jointState?.[0] ?? 0,
         joint2: jointState?.[1] ?? 0,
         joint3: jointState?.[2] ?? 0,
+        joint4: jointState?.[3] ?? 0,
+        joint5: jointState?.[4] ?? 0,
+        joint6: jointState?.[5] ?? 0,
         gripper_pos: (gripperState?.[0] ?? 0) * 100,
         gripper_force: gripperState?.[2] ?? 0,
       };
@@ -205,6 +374,15 @@ const Home = () => {
         }
       };
       reader.readAsText(file);
+    }
+  };
+
+  const handleTaskChange = (newTask: string) => {
+    if (robotData) {
+      setRobotData({
+        ...robotData,
+        robot_task: newTask
+      });
     }
   };
 
@@ -240,13 +418,7 @@ const Home = () => {
             </div>
           </div>
 
-          <div className="bg-gradient-to-r from-purple-50 to-purple-100 rounded-xl p-4 border border-purple-200">
-            <div className="flex items-center gap-2 mb-2">
-              <FileText className="w-5 h-5 text-[#9933FF]" />
-              <span className="text-md font-semibold text-purple-900">Current Task</span>
-            </div>
-            <p className="text-purple-800 ml-7 font-medium text-sm leading-relaxed">{robotData.robot_task}</p>
-          </div>
+          <TaskSwitcher currentTask={robotData.robot_task} onTaskChange={handleTaskChange} />
         </div>
 
         {/* Episodes */}
@@ -432,6 +604,9 @@ const Home = () => {
                       <Line type="monotone" dataKey="joint1" stroke="#9933FF" dot={false} strokeWidth={3} name="Joint 1" />
                       <Line type="monotone" dataKey="joint2" stroke="#8b5cf6" dot={false} strokeWidth={3} name="Joint 2" />
                       <Line type="monotone" dataKey="joint3" stroke="#ec4899" dot={false} strokeWidth={3} name="Joint 3" />
+                      <Line type="monotone" dataKey="joint4" stroke="#f59e0b" dot={false} strokeWidth={3} name="Joint 4" />
+                      <Line type="monotone" dataKey="joint5" stroke="#10b981" dot={false} strokeWidth={3} name="Joint 5" />
+                      <Line type="monotone" dataKey="joint6" stroke="#ef4444" dot={false} strokeWidth={3} name="Joint 6" />
                     </LineChart>
                   </ResponsiveContainer>
                 </div>
