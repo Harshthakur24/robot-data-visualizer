@@ -22,22 +22,39 @@ function Loader() {
             <div style={{
                 display: "flex",
                 flexDirection: "column",
-                alignItems: "center",
-                gap: 12,
+                gap: 10,
                 padding: "16px 18px",
                 borderRadius: 12,
-                background: "rgba(8,12,26,0.6)",
+                backdropFilter: "blur(8px)",
+                background: "rgba(8,12,26,0.55)",
                 border: "1px solid rgba(255,255,255,0.08)",
                 color: "#eaeefc",
-                fontFamily: "system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif"
+                fontFamily: "system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif",
+                boxShadow: "0 10px 28px rgba(0,0,0,0.35)"
             }}>
-                <div style={{ position: "relative", width: 72, height: 72 }}>
-                    <div style={{ position: "absolute", inset: 0, borderRadius: "50%", border: "4px solid rgba(255,255,255,0.14)" }} />
-                    <div style={{ position: "absolute", inset: 0, borderRadius: "50%", border: "4px solid transparent", borderTopColor: "#22d3ee", borderRightColor: "#22d3ee", animation: "spin 1s linear infinite" }} />
+                <div style={{ fontSize: 12, opacity: 0.95, letterSpacing: 0.2 }}>Loading… {pct.toFixed(0)}%</div>
+                <div style={{ width: 260 }}>
+                    <div className="lb-bar">
+                        <div className="lb-fill" style={{ width: `${pct}%` }} />
+                    </div>
                 </div>
-                <div style={{ fontSize: 12, opacity: 0.9 }}>Loading {pct.toFixed(0)}%</div>
+                <div className="lb-dots">
+                    <span className="lb-dot" />
+                    <span className="lb-dot" />
+                    <span className="lb-dot" />
+                </div>
             </div>
-            <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+            <style>{`
+                .lb-bar { position: relative; height: 10px; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); overflow: hidden; box-shadow: inset 0 0 10px rgba(34,211,238,0.12); }
+                .lb-fill { height: 100%; border-radius: 999px; position: relative; background: linear-gradient(90deg, #7dd3fc, #22d3ee, #60a5fa); box-shadow: 0 0 14px rgba(34,211,238,0.55); }
+                .lb-fill::after { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(45deg, rgba(255,255,255,0.22) 0 10px, rgba(255,255,255,0.0) 10px 20px); opacity: 0.35; mix-blend-mode: screen; animation: lb-slide 1.1s linear infinite; }
+                .lb-dots { display: flex; gap: 6px; align-items: center; justify-content: center; }
+                .lb-dot { width: 6px; height: 6px; border-radius: 50%; background: #a5f3fc; opacity: 0.7; animation: lb-pulse 1.4s ease-in-out infinite; box-shadow: 0 0 10px rgba(165,243,252,0.65); }
+                .lb-dot:nth-child(2) { animation-delay: 0.15s; }
+                .lb-dot:nth-child(3) { animation-delay: 0.3s; }
+                @keyframes lb-slide { from { background-position: 0 0; } to { background-position: 24px 0; } }
+                @keyframes lb-pulse { 0%, 100% { transform: scale(0.75); opacity: 0.5; } 50% { transform: scale(1); opacity: 1; } }
+            `}</style>
         </Html>
     );
 }

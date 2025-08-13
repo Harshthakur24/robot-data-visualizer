@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { writeFileSync, unlinkSync } from 'fs';
+import { writeFileSync, unlinkSync, readFileSync, existsSync } from 'fs';
 import { join } from 'path';
 import { exec } from 'child_process';
 import { promisify } from 'util';
@@ -72,7 +72,7 @@ async function convertTensorToVideo(tensorData: VideoTensorData): Promise<Buffer
     await execAsync(ffmpegCommand);
     
     // Read the generated video file
-    const videoBuffer = require('fs').readFileSync(outputPath);
+    const videoBuffer = readFileSync(outputPath);
     
     return videoBuffer;
     
@@ -82,13 +82,13 @@ async function convertTensorToVideo(tensorData: VideoTensorData): Promise<Buffer
       // Remove frame files
       for (let i = 0; i < frames.length; i++) {
         const framePath = join(tempDir, `frame_${i.toString().padStart(6, '0')}.ppm`);
-        if (require('fs').existsSync(framePath)) {
+        if (existsSync(framePath)) {
           unlinkSync(framePath);
         }
       }
       
       // Remove output video file
-      if (require('fs').existsSync(outputPath)) {
+      if (existsSync(outputPath)) {
         unlinkSync(outputPath);
       }
     } catch (cleanupError) {
@@ -112,7 +112,7 @@ function generateMockTensorData(cameraName: string): VideoTensorData {
       for (let x = 0; x < width; x++) {
         const pixelIndex = (y * width + x) * channels;
         const normalizedX = x / width;
-        const normalizedY = y / height;
+        // const normalizedY = y / height; // Removed unused variable
         
         // Generate different patterns based on camera type
         if (cameraName.includes('Front')) {

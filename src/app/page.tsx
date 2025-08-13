@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import Image from 'next/image';
 import { AreaChart, Area, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine } from 'recharts';
-import { Play, Pause, RotateCcw, Upload, Eye, EyeOff, Activity, Video, Bot, Settings, FileText, ChevronDown, Edit3, Check, X, ArrowLeftRight } from 'lucide-react';
+import { Play, Pause, RotateCcw, Activity, Video, Settings, FileText, ChevronDown, Edit3, Check, X, ArrowLeftRight } from 'lucide-react';
 
 //- INTERFACES & TYPES ---------------------------------- //
 
@@ -356,26 +356,7 @@ const Home = () => {
     });
   }, [currentEpisode]);
 
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e: ProgressEvent<FileReader>) => {
-        try {
-          if (typeof e.target?.result === 'string') {
-            const data = JSON.parse(e.target.result) as RobotData;
-            setRobotData(data);
-            setActiveEpisodeIndex(0);
-            setCurrentFrame(0);
-          }
-        } catch (error) {
-          console.error('Invalid JSON file:', error);
-          alert('Error: The uploaded file is not valid JSON.');
-        }
-      };
-      reader.readAsText(file);
-    }
-  };
+  // File upload functionality removed to reduce unused code
 
   const handleTaskChange = (newTask: string) => {
     if (robotData) {
@@ -386,7 +367,7 @@ const Home = () => {
     }
   };
 
-  const togglePanel = (panel: Panel) => setVisiblePanels(p => ({ ...p, [panel]: !p[panel] }));
+  // Panel toggle functionality removed to reduce unused code
 
   if (!robotData || !currentEpisode) {
     return (
