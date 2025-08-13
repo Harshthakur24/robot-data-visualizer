@@ -2,14 +2,10 @@
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls, TransformControls, Html, useGLTF, useProgress, Bounds, GizmoHelper, GizmoViewport, Grid, Center, ContactShadows } from "@react-three/drei";
+import { OrbitControls, Html, useGLTF, useProgress, Center, GizmoHelper, GizmoViewport } from "@react-three/drei";
 import * as THREE from "three";
 
 // Local lightweight types (avoid external control typings during build)
-type TransformControlsLike = {
-    addEventListener: (type: string, listener: (e: unknown) => void) => void;
-    removeEventListener: (type: string, listener: (e: unknown) => void) => void;
-} | null;
 type OrbitControlsLike = { enabled: boolean } | null;
 
 type SelectableNode = THREE.Object3D & { name: string };
@@ -130,13 +126,10 @@ export default function RoboSimulatorPage() {
     const [mounted, setMounted] = useState(false);
     useEffect(() => setMounted(true), []);
     const orbitRef = useRef<OrbitControlsLike>(null);
-    const transformRef = useRef<TransformControlsLike>(null);
     const [sceneRoot, setSceneRoot] = useState<THREE.Object3D | null>(null);
     const nodes = useSceneNodes(sceneRoot);
     const [selectedName, setSelectedName] = useState<string>("");
-    const [hoveredName, setHoveredName] = useState<string>("");
     const selected = useMemo(() => nodes.find((n) => n.name === selectedName) || null, [nodes, selectedName]);
-    const hovered = useMemo(() => nodes.find((n) => n.name === hoveredName) || null, [nodes, hoveredName]);
 
     const [rotX, setRotX] = useState<number>(0);
     const [rotY, setRotY] = useState<number>(0);
@@ -157,32 +150,7 @@ export default function RoboSimulatorPage() {
         selected.rotation.set(degreesToRadians(rotX), degreesToRadians(rotY), degreesToRadians(rotZ));
     }, [selected, rotX, rotY, rotZ]);
 
-    // When manipulating with TransformControls, update the sliders
-    useEffect(() => {
-        const controls = transformRef.current;
-        if (!controls) return;
-        const cb = () => {
-            if (!selected) return;
-            setRotX(radiansToDegrees(selected.rotation.x));
-            setRotY(radiansToDegrees(selected.rotation.y));
-            setRotZ(radiansToDegrees(selected.rotation.z));
-        };
-        controls.addEventListener("objectChange", cb);
-        return () => controls.removeEventListener("objectChange", cb);
-    }, [selected]);
 
-    // Disable OrbitControls while rotating with TransformControls
-    useEffect(() => {
-        const controls = transformRef.current;
-        const orbit = orbitRef.current;
-        if (!controls || !orbit) return;
-        const onDrag = (event: unknown) => {
-            const value = Boolean((event as { value?: boolean })?.value);
-            orbit.enabled = !value; // value=true when dragging
-        };
-        controls.addEventListener("dragging-changed", onDrag);
-        return () => controls.removeEventListener("dragging-changed", onDrag);
-    }, []);
 
     if (!mounted) {
         return (
@@ -209,29 +177,15 @@ export default function RoboSimulatorPage() {
                         shadow-mapSize-height={2048}
                     />
 
-                    <Grid args={[20, 20]} cellSize={0.5} sectionColor="#3a4252" cellColor="#253044" infiniteGrid position={[0, -0.001, 0]} />
-                    <ContactShadows opacity={0.5} scale={18} blur={3.2} far={18} resolution={1536} position={[0, -0.001, 0]} />
-
                     <React.Suspense fallback={<Loader />}>
-                        <Bounds fit clip margin={1.2}>
-                            <RobotModel onRootReady={setSceneRoot} />
-                        </Bounds>
+                        <RobotModel onRootReady={setSceneRoot} />
                     </React.Suspense>
-
-                    {hovered && <BoxHighlight target={hovered} color="#60a5fa" />}
-                    {selected && <BoxHighlight target={selected} color="#22d3ee" />}
-
-                    {selected && (
-                        // @ts-expect-error: Ref typing from drei is stricter than our lightweight local type
-                        <TransformControls ref={transformRef} object={selected} mode="rotate" showX showY showZ />
-                    )}
 
                     <GizmoHelper alignment="bottom-right" margin={[80, 80]}>
                         <GizmoViewport labelColor="white" axisHeadScale={1} />
                     </GizmoHelper>
 
-                    {/* @ts-expect-error: Ref typing from drei is stricter than our lightweight local type */}
-                    <OrbitControls ref={orbitRef} makeDefault enableDamping dampingFactor={0.12} rotateSpeed={0.75} />
+                    <OrbitControls makeDefault enableDamping dampingFactor={0.12} rotateSpeed={0.75} />
 
                     {/* Loader is provided via Suspense fallback above */}
                 </Canvas>
@@ -245,7 +199,7 @@ export default function RoboSimulatorPage() {
                         nodes={nodes}
                         selectedName={selectedName}
                         onSelect={setSelectedName}
-                        onHover={setHoveredName}
+                        onHover={() => { }}
                     />
 
                     <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 12 }}>
@@ -284,24 +238,7 @@ export default function RoboSimulatorPage() {
     );
 }
 
-function BoxHighlight({ target, color }: { target: THREE.Object3D; color: string }) {
-    const helperRef = useRef<THREE.BoxHelper | null>(null);
-    useEffect(() => {
-        if (!target) return;
-        const helper = new THREE.BoxHelper(target, new THREE.Color(color));
-        helperRef.current = helper;
-        return () => {
-            // cleanup when target changes/unmounts
-            helperRef.current = null;
-            try {
-                helper.geometry.dispose();
-            } catch { }
-        };
-    }, [target, color]);
-    useFrame(() => helperRef.current?.update());
-    if (!helperRef.current) return null;
-    return <primitive object={helperRef.current} />;
-}
+
 
 function PartsPanel({
     nodes,
