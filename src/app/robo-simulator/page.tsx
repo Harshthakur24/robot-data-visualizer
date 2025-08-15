@@ -160,22 +160,40 @@ export default function RoboSimulatorPage() {
 
     return (
         <div style={{ display: "flex", height: "calc(100dvh - 0px)", width: "100%", overflow: "hidden" }}>
-            <div style={{ flex: 1, position: "relative", background: "#0b1020", minWidth: 0, minHeight: 0 }}>
+            <div style={{ flex: 1, position: "relative", background: "#747474", minWidth: 0, minHeight: 0 }}>
                 <Canvas shadows camera={{ position: [3.5, 2.5, 4.5], fov: 50 }}>
-                    <color attach="background" args={["#0b1020"]} />
+                    <color attach="background" args={["#747474"]} />
 
-                    <hemisphereLight intensity={0.5} color="#ffffff" groundColor="#4a5568" />
-                    <ambientLight intensity={0.25} />
-                    {/* Key + fill lights to highlight the robot */}
-                    <spotLight position={[3, 5.5, 2.5]} angle={0.45} penumbra={0.6} intensity={1.2} castShadow color="#ffffff" />
-                    <pointLight position={[-1.5, 2.2, 1.5]} intensity={0.35} color="#cbd5e1" distance={12} />
+                    <ambientLight intensity={0.4} />
+                    {/* Main top light for clear illumination */}
                     <directionalLight
                         castShadow
-                        position={[4, 6, 4]}
-                        intensity={1.0}
+                        position={[0, 8, 0]}
+                        intensity={1.5}
                         shadow-mapSize-width={2048}
                         shadow-mapSize-height={2048}
+                        shadow-camera-far={50}
+                        shadow-camera-left={-10}
+                        shadow-camera-right={10}
+                        shadow-camera-top={10}
+                        shadow-camera-bottom={-10}
                     />
+                    {/* Additional angled light for better depth */}
+                    <directionalLight
+                        castShadow
+                        position={[5, 6, 3]}
+                        intensity={0.8}
+                        shadow-mapSize-width={1024}
+                        shadow-mapSize-height={1024}
+                    />
+                    {/* Soft fill light */}
+                    <hemisphereLight intensity={0.3} color="#ffffff" groundColor="#5a5a5a" />
+
+                    {/* Ground plane for shadows */}
+                    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -2, 0]} receiveShadow>
+                        <planeGeometry args={[20, 20]} />
+                        <meshStandardMaterial color="#6a6a6a" roughness={0.8} metalness={0.1} />
+                    </mesh>
 
                     <React.Suspense fallback={<Loader />}>
                         <RobotModel onRootReady={setSceneRoot} />
